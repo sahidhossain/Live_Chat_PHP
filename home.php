@@ -8,49 +8,42 @@ session_start();
 <head>
 	<meta charset="UTF-8">
 	<title>Document</title>
+
+	<script>
+		function ajax()
+		{
+			var req=new XMLHttpRequest();
+			req.onreadystatechange=function()
+			{
+				if(req.readyState==4 && req.status==200)
+				{
+					document.getElementById('chat').innerHTML=req.responseText;
+				}
+			}
+			req.open('GET','chat.php',true);
+			req.send();
+		}
+		setInterval(function(){ajax()},1000);
+	</script>
 </head>
-<body>
+<body onload="ajax();">
 
-	<h3> chat's are</h3>
-	<div style="width: all;height: 100px;">
-		<?php
-		include_once('dbh.php');
-         $sql="select * from posts order by id DESC;";
-         $result=mysqli_query($con,$sql);
-         $resultcheck=mysqli_num_rows($result);
-         if($resultcheck>0)
-         {
-         	while($row=mysqli_fetch_assoc($result))
-         	{
-         		?>
+<div id="chat"></div>
 
-         		<span><?php echo $row['date'];?>::<strong><?php echo $row['name'];?>--</strong><span style="font-size: 20px;"><?php echo $row['msg'];?></span></span>
-         		<br>
-
-         		<?php
-         	}
-         }
-         else
-         {
-         	echo "doesn't have a single messege";
-         }
-		?>
-		
-	</div>
-<div style="float: right;">
+<div style="float: left;">
 		<h2> <?php echo $_SESSION['name'];?> let's Start Chatting</h2>
 	<form action="send.php" method="POST">
 		<textarea method="post" name="textarea" id="" cols="30" rows="10" placeholder="type your messege"></textarea>
 		<br>
 		<button name="submit"type="submit" method="post" value="send messege">Send Messeges</button>
 	</form>
-</div>
+ 
 
 <br>
 <br>
 <br>
 <br>
-	<div style="float: right;">
+
 		<form action="logout.php"  method="post">
 		<button name="submit"type="submit" method="POST" value="logout">Logout</button>
 	</form>
